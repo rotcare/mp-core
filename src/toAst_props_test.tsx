@@ -3,36 +3,35 @@ import { toAst } from './toAst';
 import { strict } from 'assert';
 import './native_components';
 import { Widget, WidgetType } from './Widget';
+import { defineWidget } from './defineWidget';
 
-describe('toAst_var', () => {
+describe('toAst_props', () => {
     it('ref from default scope', () => {
         class MyCompModel {
             public readonly someProp1: string;
         }
-        function MyComp(props: MyCompModel) {
-            return <wx-view>{ props.someProp1 }</wx-view>
-        }
+        const MyComp = defineWidget(MyCompModel, props => <wx-view>{ props.someProp1 }</wx-view>)
         const ast = toAst(MyComp, 'default');
         strict.deepEqual({ tag: 'wx-view', props: null, children:[{ scope: 'default', segments: [ 'someProp1' ] }]}, ast);
     })
     it('ref from multiple scopes', () => {
         class SomeLayoutModel {
             // 动态传入的 Widget
-            header: WidgetType<{ title: string }>
+            public readonly header: WidgetType<{ title: string }>
         }
-        function SomeLayout(props: SomeLayoutModel) {
+        const SomeLayout = defineWidget(SomeLayoutModel, props => {
             // 用 <Widget /> 渲染动态传入的 Widget
             return <wx-view>before{<Widget render={props.header} title="hello"/>}after</wx-view>;
-        }
+        })
         class MyCompModel {
-            prefix: string;
+            public readonly prefix: string;
         }
-        function MyComp(props: MyCompModel) {
+        const MyComp = defineWidget(MyCompModel, props => {
             return <SomeLayout header={
                 // 用 lambda 定义 inline widget
                 (headerProps) => <wx-view>{props.prefix}:{headerProps.title}</wx-view>
             }/>
-        }
+        })
         const ast1 = toAst(MyComp, 'default');
         const ast2 = toAst(ast1.props.header, 'headerProps');
         strict.deepEqual({ tag: 'wx-view', props: null, children:[

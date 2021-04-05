@@ -1,0 +1,1 @@
+export type ModelEvent<T = {}> = { __modelEvent: T };

@@ -1,0 +1,1 @@
+export type ModelProp<T> = { __modelProp: T } & [object, string];
