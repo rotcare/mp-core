@@ -1,7 +1,14 @@
-export function toAst<T extends { render(): any }>(widgetClass: { new (): T }) {
-    return widgetClass.prototype.render.call(new Proxy({}, {
+export function toAst(widget: (props?: any) => any, scope: string) {
+    return widget(newScope(scope));
+}
+
+function newScope(scope: string, segments: string[] = []): any {
+    return new Proxy({ scope, segments }, {
         get(target, p, receiver) {
-            return { var: p };
+            if (p === 'scope' || p === 'segments') {
+                return Reflect.get(target, p);
+            }
+            return newScope(scope, [...segments, p as string]);
         }
-    }));
+    })
 }

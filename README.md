@@ -4,11 +4,10 @@
 
 * Show 对应 wx:if
 * For 对应 wx:for
-* Generic 对应 抽象节点
-* 普通的 slot 使用原生语法 `<slot />`
+* Widget 对应 抽象节点
 
 引用组件
 
-* useNativeComponent 导入原生组件
+* 原生组件全局声明，例如 `<wx-view>`。微信小程序的原生组件，导入 `@rotcare/mp-wechat`
 * useComponent 导入第三方组件
 * useWidget 导入 mp-core 声明式风格的 UI 定义

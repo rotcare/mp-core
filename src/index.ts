@@ -1,6 +1,6 @@
 export * from './For';
 export * from './Show';
-export * from './Generic'
-export * from './React';
-export * from './useNativeComponent';
+export * from './Widget'
 export * from './toAst';
+import * as React from './FakeReact';
+export { React };
