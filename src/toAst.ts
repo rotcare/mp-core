@@ -1,5 +1,5 @@
-export function toAst<T extends { render(): any }>(componentClass: { new (): T }) {
-    return componentClass.prototype.render.call(new Proxy({}, {
+export function toAst<T extends { render(): any }>(widgetClass: { new (): T }) {
+    return widgetClass.prototype.render.call(new Proxy({}, {
         get(target, p, receiver) {
             return { var: p };
         }
